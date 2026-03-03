@@ -1,0 +1,56 @@
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+
+const app = express()
+const PORT = process.env.PORT || 3000
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
+})
+
+const prisma = new PrismaClient({
+  adapter,
+})
+
+
+app.use(cors())
+app.use(express.json())
+
+
+app.get('/', (req, res) => {
+  res.send('Restaurant API is running!')
+})
+
+app.post('/api/restaurants', async (req, res) => {
+  try {
+    const { name, description, logoUrl } = req.body
+
+    const newRestaurant = await prisma.restaurant.create({
+      data: { name, description, logoUrl }
+    })
+
+    res.status(201).json(newRestaurant)
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to create restaurant',
+      details: error.message
+    })
+  }
+})
+
+app.get('/api/restaurants', async (req, res) => {
+  try {
+    const restaurants = await prisma.restaurant.findMany()
+    res.json(restaurants)
+  } catch (error) {
+    console.error("❌ Prisma Error:", error);
+    res.status(500).json({ error: 'Failed to fetch restaurants', details: error.message });
+  }
+})
+
+app.listen(PORT, () => {
+  console.log(`✅ Server is running on: http://localhost:${PORT}`)
+})
