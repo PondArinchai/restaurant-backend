@@ -72,3 +72,16 @@ app.get('/api/restaurants', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Server is running on: http://localhost:${PORT}`)
 })
+
+
+app.get('/api/restaurants/:restaurantId/menu', async (req, res) => {
+  const { restaurantId } = req.params
+  try {
+    const menu = await prisma.menuItem.findMany({
+      where: { restaurantId: restaurantId }
+    })
+    res.json(menu)
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching menu for this restaurant' })
+  }
+})
