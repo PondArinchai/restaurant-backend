@@ -21,7 +21,7 @@ app.use(express.json())
 
 
 app.get('/', (req, res) => {
-  res.send('Restaurant API is running!')
+  res.send('Restaurant API is running')
 })
 
 app.post('/api/restaurants', async (req, res) => {
@@ -41,12 +41,30 @@ app.post('/api/restaurants', async (req, res) => {
   }
 })
 
+
+
+app.post('/api/MenuItem', async (req, res) => {
+  try{
+    const { restaurantId, name, price, description, imageUrl } = req.body
+
+    const newMenuItem = await prisma.menuItem.create({
+      data: { restaurantId, name, price, description, imageUrl }
+    })
+    res.status(201).json(newMenuItem)
+  } catch (error) {
+    res.status(500).json({
+      error: 'Failed to create menu item',
+      details: error.message
+    })
+  }
+})
+
 app.get('/api/restaurants', async (req, res) => {
   try {
     const restaurants = await prisma.restaurant.findMany()
     res.json(restaurants)
   } catch (error) {
-    console.error("❌ Prisma Error:", error);
+    console.error("Prisma Error:", error);
     res.status(500).json({ error: 'Failed to fetch restaurants', details: error.message });
   }
 })
