@@ -11,7 +11,8 @@ app.use(express.json())
 
 
 app.use('/api/menu', menuRoutes)
-app.use('/api/restaurants', restaurantRoutes)
+app.use('/api', restaurantRoutes)
+
 
 app.get('/', (req, res) => {
   res.send('Restaurant API is running')
@@ -23,15 +24,7 @@ app.get('/', (req, res) => {
 
 
 
-// app.get('/api/restaurants', async (req, res) => {
-//   try {
-//     const restaurants = await prisma.restaurant.findMany()
-//     res.json(restaurants)
-//   } catch (error) {
-//     console.error("Prisma Error:", error);
-//     res.status(500).json({ error: 'Failed to fetch restaurants', details: error.message });
-//   }
-// })
+
 
 
 
