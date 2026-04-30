@@ -5,13 +5,15 @@ const app = express()
 const PORT = process.env.PORT || 3000
 import menuRoutes from './routes/menuRoutes.js';
 import restaurantRoutes from './routes/restaurantRoutes.js';
+import tableRoutes from './routes/tableRoutes.js';
 
 app.use(cors())
 app.use(express.json())
 
 
 app.use('/api/menu', menuRoutes)
-app.use('/api', restaurantRoutes)
+app.use('/api/restaurants', restaurantRoutes)
+app.use('/api/tables', tableRoutes)
 
 
 app.get('/', (req, res) => {
